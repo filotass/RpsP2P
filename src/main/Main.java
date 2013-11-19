@@ -1,13 +1,14 @@
 package main;
 
+import gui.StartForm;
+import gui.Utils;
+
 public class Main {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		StartForm st = new StartForm();
+                Utils.centralize(st);
+                st.setVisible(true);
 	}
 
 }
