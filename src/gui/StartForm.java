@@ -4,7 +4,9 @@
  */
 package gui;
 
-import command.outgoing.BroadcastJoinCommand;
+import command.CommandFactory;
+import command.incoming.JoinCommand;
+import command.outgoing.BroadcastCommand;
 import java.net.Socket;
 import main.Main;
 import network.PeerConnection;
@@ -61,6 +63,8 @@ public class StartForm extends javax.swing.JFrame {
         jLabel1.setText("Username:");
 
         jLabel2.setText("Port Number:");
+
+        txtServerPortNum.setText("7000");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -214,7 +218,8 @@ public class StartForm extends javax.swing.JFrame {
             Utils.centralize(mainForm);
             this.setVisible(false);
             
-            main.schedule(new BroadcastJoinCommand(server, username), 10);
+            String broadcastMessage = JoinCommand.code + CommandFactory.S + username;
+            main.schedule(new BroadcastCommand(server,broadcastMessage), 10);
         }catch(NumberFormatException e){
             e.printStackTrace();
         }catch(Exception e){

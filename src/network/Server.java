@@ -1,5 +1,6 @@
 package network;
 
+import game.Game;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,13 +10,16 @@ import main.Main;
 
 public class Server extends Thread{
 
+        private Main main;
+        private int portNum;
+        
 	private ArrayList<Integer> peerConnectionIDs;
 	private HashMap<Integer, PeerConnection> peerConnections;
 	private HashMap<String, Integer> routerMap;
 	
-	private int portNum;
+
+        private HashMap<String, Game> games;
         
-        private Main main;
 	
 	//private Object lockConnections;
 	//private Object lockRouterMap;
@@ -26,6 +30,7 @@ public class Server extends Thread{
 		peerConnections = new HashMap<>();
 		routerMap = new HashMap<>();
                 peerConnectionIDs= new ArrayList<>();
+                games = new HashMap<>();
                 this.start();
 	}
 	
@@ -100,6 +105,19 @@ public class Server extends Thread{
                         p.send(message);
                 }
             }
+	}
+        
+        
+        public void addGame(String gameID, Game game){
+            games.put(gameID, game);
+	}
+	
+	public void removeGame(String gameID){ 
+		games.remove(gameID);
+	}
+	
+	public Game getGame(String gameID){ 
+		return games.get(gameID);
 	}
 	
 	

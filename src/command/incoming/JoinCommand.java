@@ -21,11 +21,14 @@ public class JoinCommand implements Command{
     private int peerConID;
     private MainForm mainForm;
     
-    public JoinCommand(Server server, int peerConID, String peerName, MainForm m){
+    private String message;
+    
+    public JoinCommand(Server server, int peerConID, String peerName, MainForm m, String message){
         this.server = server;
         this.peerName = peerName;
         this.peerConID = peerConID;
         this.mainForm = m;
+        this.message = message;
     }
     
     
@@ -36,9 +39,8 @@ public class JoinCommand implements Command{
 
     @Override
     public void run() {
-       System.out.println("Runs successfully");
        server.add(peerName, peerConID);
-       server.propagateMessage(peerConID, peerName);
+       server.propagateMessage(peerConID, message);
        mainForm.addNewPeer(peerName);
     }
     

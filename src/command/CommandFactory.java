@@ -12,7 +12,7 @@ public class CommandFactory {
             
             String code = params[0];
             if(code.equals(JoinCommand.code)){
-                return new JoinCommand(main.getServer(), peerConID, params[1], main.getMainForm());
+                return new JoinCommand(main.getServer(), peerConID, params[1], main.getMainForm(), message);
             }
 
             return null;
