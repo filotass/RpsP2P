@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import main.Main;
 
 public class Server extends Thread{
 
@@ -13,14 +14,19 @@ public class Server extends Thread{
 	private HashMap<String, Integer> routerMap;
 	
 	private int portNum;
+        
+        private Main main;
 	
 	//private Object lockConnections;
 	//private Object lockRouterMap;
 	
-	private Server(int portNum){
+	public Server(Main main, int portNum){
 		this.portNum = portNum;
+                this.main = main;
 		peerConnections = new HashMap<>();
 		routerMap = new HashMap<>();
+                peerConnectionIDs= new ArrayList<>();
+                this.start();
 	}
 	
 	public void run(){
@@ -29,7 +35,7 @@ public class Server extends Thread{
 	        while (true) {
 	        	try{
 	    			Socket socket = server.accept();
-					this.add(new PeerConnection(socket));
+                                this.add(new PeerConnection(main, socket));
 	    		} catch (IOException e) {
 	    			e.printStackTrace();
 	    		}
@@ -79,12 +85,21 @@ public class Server extends Thread{
 		}
 	}
 	
-	public void sendMessageToPeer(String username, String message){
-			int i = routerMap.get(username);
-			PeerConnection p = peerConnections.get(i);
-			if(p!=null){
-				p.send(message);
-			}
+	public void sendMessageToPeer(String peerName, String message){
+                int i = routerMap.get(peerName);
+                PeerConnection p = peerConnections.get(i);
+                if(p!=null){
+                        p.send(message);
+                }
+	}
+        
+        public void propagateMessage(int incomingPeerConnectionID, String message){
+            for(Integer i:peerConnectionIDs){
+                PeerConnection p = peerConnections.get(i);
+                if(p!=null && p.getConnectionID()!=incomingPeerConnectionID){
+                        p.send(message);
+                }
+            }
 	}
 	
 	

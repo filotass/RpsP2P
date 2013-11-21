@@ -1,4 +1,4 @@
-package network;
+package command;
 
 public interface Command extends Runnable{
 

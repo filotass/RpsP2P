@@ -1,9 +1,12 @@
 package network;
+import command.Command;
+import command.CommandFactory;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import main.Main;
 
 public class PeerConnection extends Thread{
 
@@ -14,10 +17,12 @@ public class PeerConnection extends Thread{
 	
 	private boolean closed = false;
 	private int id;
-	private static short increment = 0;
+	private static int increment = 0;
+        
+        private Main main;
 	
 	
-	public PeerConnection(Socket socket){
+	public PeerConnection(Main main, Socket socket){
 		this.socket = socket;
 		if(increment == Integer.MAX_VALUE){
 			increment = 0;
@@ -25,8 +30,8 @@ public class PeerConnection extends Thread{
 			increment++;
 		}
 		id = increment;
+                this.main = main;
 		this.open();
-		this.start();
 	}
 
 	
@@ -63,22 +68,23 @@ public class PeerConnection extends Thread{
 	
 	public void run(){
 		try{
-			while (true){
-				String input = streamIn.readLine();
-				if(input!=null){
-					System.out.println(input);
-					String[] params = input.split("~");
-					//Command command = RunnableFactory.createCommand(params);
-//					if(command!=null){
-//						command.execute();
-//					}else{
-//						System.err.println("Uknown command :"+ input);
-//					}
-				}else{
-					throw new Exception("Connection has been closed.");
-				}
-				
-			}
+                    System.out.println("Conneciton accepted");
+                    while (true){
+                        String input = streamIn.readLine();
+                        if(input!=null){
+                            System.out.println(input);
+                            Command command = CommandFactory.getCommand(main, this.id, input);
+                            System.out.println("OK1");
+                            if(command!=null){
+                                    System.out.println("input accepted");
+                                    main.execute(command);
+                            }else{
+                                    System.err.println("Uknown command :"+ input);
+                            }
+                        }else{
+                            throw new Exception("Connection has been closed.");
+                        }
+                    }
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -86,12 +92,13 @@ public class PeerConnection extends Thread{
 	
 	
 	public void send(String messageToSend){
+            System.out.println("Out:"+messageToSend);
 		try{
 			if (this.isClosed())	// Check again if client is closed
 				return; 			// If it is exit and don't send the message
 				
 			if (messageToSend.length() > 0){// check if message length is >0
-				streamOut.write(messageToSend);	// If it is finally send the message
+				streamOut.write(messageToSend+"\n");	// If it is finally send the message
 				streamOut.flush();
 			}
 		}catch (Exception e) {
