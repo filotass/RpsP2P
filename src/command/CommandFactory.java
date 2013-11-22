@@ -33,7 +33,7 @@ public class CommandFactory {
             }else if(code.equals(AnswerCommand.code)){
                return new AnswerCommand(main, params[1], params[4],params[5], params[2],Integer.parseInt(params[3]), message);
             }else if(code.equals(CancelCommand.code)){
-                
+                 return new CancelCommand(main, params[1], params[2], params[3], message);
             }
 
             return null;

@@ -40,7 +40,7 @@ public class JoinCommand implements Command{
 
     @Override
     public void run() {
-       server.add(peerName, peerConID);
+       server.addRouterEntry(peerName, peerConID);
        server.propagateMessage(peerConID, message);
        mainForm.addNewPeer(peerName);
     }

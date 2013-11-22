@@ -21,8 +21,9 @@ public class Server extends Thread{
         private HashMap<String, Game> games;
         
 	
-	//private Object lockConnections;
-	//private Object lockRouterMap;
+	private final Object lockConnections = new Object();
+	private final Object lockRouterMap= new Object();
+        private final Object lockGames= new Object();
 	
 	public Server(Main main, int portNum){
 		this.portNum = portNum;
@@ -40,7 +41,7 @@ public class Server extends Thread{
                     while (true) {
                             try{
                                 Socket socket = server.accept();
-                                this.add(new PeerConnection(main, socket));
+                                this.addPeerConnection(new PeerConnection(main, socket));
                             } catch (IOException e) {
                                     e.printStackTrace();
                             }
@@ -50,38 +51,64 @@ public class Server extends Thread{
                 }
 	}
 	
-	public void add(PeerConnection peerConnection){
+	public void addPeerConnection(PeerConnection peerConnection){
+            synchronized(lockConnections){
 		PeerConnection p = peerConnections.put(peerConnection.getConnectionID(), peerConnection);
 		if(p==null){
 			peerConnectionIDs.add(peerConnection.getConnectionID());
 		}
+            }
 	}
 	
-	public void remove(Integer peerConnectionID){
+	public void removePeerConnection(Integer peerConnectionID){
+            synchronized(lockConnections){
 		PeerConnection p = peerConnections.remove(peerConnectionID);
 		if(p!=null){
 			peerConnectionIDs.remove(p.getConnectionID());
 		}
+            }
 	}
 	
-	public PeerConnection get(int peerConnectionID){
+	public PeerConnection getPeerConnection(int peerConnectionID){
 		return peerConnections.get(peerConnectionID);
 	}
 	
 	
-	public void add(String peerName, int peerConnectionID){
+	public void addRouterEntry(String peerName, int peerConnectionID){
+            synchronized(lockRouterMap){
 		routerMap.put(peerName, peerConnectionID);
+            }
 	}
 	
-	public void remove(String peerName){ 
+	public void removeRouterEntry(String peerName){ 
+            synchronized(lockRouterMap){
 		routerMap.remove(peerName);
+            }
 	}
 	
-	public int get(String peerName){ 
+	public int getRouterEntry(String peerName){ 
 		return routerMap.get(peerName);
 	}
 	
-	public void broadcastMessage(String message){
+
+        
+        public void addGame(String gameID, Game game){
+            synchronized(lockGames){
+                games.put(gameID, game);
+            }
+	}
+	
+	public void removeGame(String gameID){ 
+           synchronized(lockGames){
+		games.remove(gameID);
+           }
+	}
+	
+	public Game getGame(String gameID){ 
+		return games.get(gameID);
+	}
+        
+        public void broadcastMessage(String message){
 		for(Integer i:peerConnectionIDs){
 			PeerConnection p = peerConnections.get(i);
 			if(p!=null){
@@ -107,18 +134,4 @@ public class Server extends Thread{
             }
 	}
         
-        
-        public void addGame(String gameID, Game game){
-                games.put(gameID, game);
-	}
-	
-	public void removeGame(String gameID){ 
-		games.remove(gameID);
-	}
-	
-	public Game getGame(String gameID){ 
-		return games.get(gameID);
-	}
-	
-	
 }

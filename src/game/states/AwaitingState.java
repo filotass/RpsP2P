@@ -7,6 +7,7 @@ package game.states;
 import game.Game;
 import game.GameState;
 import game.Peer;
+import java.util.ArrayList;
 import main.Main;
 
 
@@ -37,7 +38,12 @@ public class AwaitingState implements GameState{
 
     @Override
     public void cancelReceived(String peerName) {
-        
+        ArrayList<Peer> peers = game.getPeers();
+        for(Peer peer: peers){
+            if(peer.getName().equals(peerName)){
+                peer.setStatus(Game.CANCELED_STATUS);
+            }
+        }
     }
     
 }

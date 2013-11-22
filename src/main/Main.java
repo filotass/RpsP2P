@@ -2,29 +2,29 @@ package main;
 
 
 import gui.MainForm;
-import java.util.concurrent.Executors;
-
 import gui.StartForm;
 import gui.Utils;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.swing.SwingUtilities;
 import network.Server;
+
 
 public class Main {
 
 	private String username;
         private Server server;
         private MainForm mainForm;
-	//private  ExecutorService executor = Executors.newFixedThreadPool(5);
+
         private ScheduledExecutorService scheduler =  Executors.newScheduledThreadPool(10);
 	
 	public static void main(String[] args){
                 final Main main = new Main();
-                java.awt.EventQueue.invokeLater(new Runnable() {
+                SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         StartForm st = new StartForm(main);
-                        Utils.centralize(st);
-                        st.setVisible(true);
+                       
                     }
                 });
         }

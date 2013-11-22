@@ -72,11 +72,9 @@ public class PeerConnection extends Thread{
                     while (true){
                         String input = streamIn.readLine();
                         if(input!=null){
-                            System.out.println(input);
+                            System.out.println("In :"+input);
                             Command command = CommandFactory.getCommand(main, this.id, input);
-                            System.out.println("OK1");
                             if(command!=null){
-                                    System.out.println("input accepted");
                                     main.schedule(command);
                             }else{
                                     System.err.println("Uknown command :"+ input);

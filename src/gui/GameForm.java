@@ -6,11 +6,13 @@ package gui;
 
 import command.CommandFactory;
 import command.incoming.AnswerCommand;
+import command.incoming.CancelCommand;
 import command.incoming.ReadyCommand;
 import command.outgoing.SendCommand;
 import game.Game;
 import game.Peer;
 import java.util.ArrayList;
+import javax.swing.WindowConstants;
 import javax.swing.table.AbstractTableModel;
 import main.Main;
 
@@ -31,6 +33,7 @@ public class GameForm extends javax.swing.JFrame {
         this.main = main;
         this.setTitle(main.getUsername());
         this.disableRound();
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         Utils.centralize(this);
     }
     
@@ -57,7 +60,7 @@ public class GameForm extends javax.swing.JFrame {
         scissorsBtn = new javax.swing.JButton();
         paperBtn = new javax.swing.JButton();
         rockBtn = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
         readyBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -117,10 +120,15 @@ public class GameForm extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton4.setText("Cancel");
-        jButton4.setToolTipText("");
-        jButton4.setActionCommand("Ready For Next Round");
+        cancelButton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        cancelButton.setText("Cancel");
+        cancelButton.setToolTipText("");
+        cancelButton.setActionCommand("Ready For Next Round");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         readyBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         readyBtn.setText("<html>Ready For <br>Next Round</html>");
@@ -146,7 +154,7 @@ public class GameForm extends javax.swing.JFrame {
                         .addComponent(scissorsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(readyBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -178,7 +186,7 @@ public class GameForm extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addComponent(readyBtn)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButton4))
+                            .addComponent(cancelButton))
                         .addComponent(scissorsBtn, javax.swing.GroupLayout.Alignment.TRAILING)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -254,9 +262,22 @@ public class GameForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_scissorsBtnActionPerformed
 
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        ArrayList<Peer> peers = game.getPeers();
+        for(Peer peer: peers){
+            if(peer.getName().equals(main.getUsername())){
+                peer.setStatus(Game.CANCELED_STATUS);
+                this.setTable(game);
+            }else{
+                String message = CancelCommand.code + CommandFactory.S + peer.getName() + CommandFactory.S + game.getGameID()+ CommandFactory.S + main.getUsername();
+                main.schedule(new SendCommand(main.getServer(), peer.getName(), message));
+            }
+        }
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable masterTable;

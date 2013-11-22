@@ -25,6 +25,7 @@ public class StartForm extends javax.swing.JFrame {
     public StartForm(Main main) {
         initComponents();
         this.main = main;
+        Utils.centralize(this);
     }
 
     /**
@@ -211,7 +212,7 @@ public class StartForm extends javax.swing.JFrame {
                 String peerIP = txtPeerIPaddress.getText();
                 int peerPortNum = Integer.valueOf(txtPeerPortNum.getText());
                 PeerConnection p = new PeerConnection(main, new Socket(peerIP, peerPortNum));
-                 main.getServer().add(p);
+                 main.getServer().addPeerConnection(p);
             }
             MainForm mainForm = new MainForm(this.main);
             main.setMainForm(mainForm);
