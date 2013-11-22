@@ -4,6 +4,10 @@
  */
 package gui;
 
+import game.Game;
+import game.Peer;
+import java.util.ArrayList;
+import javax.swing.table.AbstractTableModel;
 import main.Main;
 
 /**
@@ -20,6 +24,7 @@ public class GameForm extends javax.swing.JFrame {
     public GameForm(Main main) {
         initComponents();
         this.main = main;
+        Utils.centralize(this);
     }
 
     /**
@@ -32,7 +37,7 @@ public class GameForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        masterTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         scissorsBtn = new javax.swing.JButton();
@@ -43,7 +48,7 @@ public class GameForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        masterTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -69,7 +74,7 @@ public class GameForm extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(masterTable);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Round");
@@ -154,9 +159,70 @@ public class GameForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable masterTable;
     private javax.swing.JButton paperBtn;
     private javax.swing.JButton rockBtn;
     private javax.swing.JButton scissorsBtn;
     // End of variables declaration//GEN-END:variables
+
+    public void setTable(Game game) {
+        
+        ArrayList<Peer> peers = game.getPeers();
+         Object[][] data = new Object[peers.size()][5];
+
+        for(int j=0;j<peers.size();j++){
+            Peer peer = peers.get(j);
+            data[j][0] = peer.getName();
+            data[j][1] = peer.getTotalPoints();
+            data[j][2] = peer.getPrevRoundPoints();
+            data[j][3] = peer.getPrev_choice();
+            data[j][4] = peer.getStatus();
+
+        }
+
+        masterTable.setModel(new MasterTable(data));
+       
+        
+    }
+    
+    private class MasterTable extends AbstractTableModel {
+        
+        public MasterTable(Object[][] data){
+            this.data = data;
+        }
+        
+        
+        private String[] columnNames = {"Peer Name","Total Points", "Prev Points", "Prev Choice","Status"};
+        private Object[][] data;
+
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public int getRowCount() {
+            return data.length;
+        }
+
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+
+        public Object getValueAt(int row, int col) {
+            return data[row][col];
+        }
+
+        public Class getColumnClass(int index) {
+            if(index==0 || index==3 || index==4){
+                return String.class;
+            }else if(index==1 || index==2 ){
+                return Integer.class;
+            }
+            return Object.class;
+        }
+
+
+        public boolean isCellEditable(int row, int col) {
+            return false;
+        }
+    }
 }

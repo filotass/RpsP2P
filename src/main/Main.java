@@ -48,7 +48,7 @@ public class Main {
 	return this.server;
 	}
 	
-	public void execute(Runnable runnable){
+	public void schedule(Runnable runnable){
 		try{
                     scheduler.schedule(runnable,0, TimeUnit.SECONDS);
 		}catch(Exception e){

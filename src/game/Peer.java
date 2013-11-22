@@ -14,14 +14,14 @@ public class Peer {
     private int totalPoints;
     private int prevRoundPoints;
     private String prev_choice;
-    private String accepted;
+    private String status;
             
     public Peer(String name){
         this.name = name;
         this.totalPoints =0;
         this.prevRoundPoints = 0;
         this.prev_choice = "-";
-        this.accepted = "ACCEPTANCE AWAITING";
+        this.status = "AWAITING";
     }
     public String getName() {
         return name;
@@ -39,8 +39,8 @@ public class Peer {
         return prev_choice;
     }
 
-    public String isAccepted() {
-        return accepted;
+    public String getStatus() {
+        return status;
     }
 
     public void setTotalPoints(int totalPoints) {
@@ -55,8 +55,8 @@ public class Peer {
         this.prev_choice = prev_choice;
     }
 
-    public void setAccepted(String accepted) {
-        this.accepted = accepted;
+    public void setStatus(String status) {
+        this.status = status;
     }
     
     

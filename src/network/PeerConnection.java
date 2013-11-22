@@ -77,7 +77,7 @@ public class PeerConnection extends Thread{
                             System.out.println("OK1");
                             if(command!=null){
                                     System.out.println("input accepted");
-                                    main.execute(command);
+                                    main.schedule(command);
                             }else{
                                     System.err.println("Uknown command :"+ input);
                             }

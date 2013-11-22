@@ -4,6 +4,10 @@
  */
 package gui;
 
+import command.CommandFactory;
+import command.incoming.PrepareCommand;
+import command.outgoing.SendCommand;
+import game.Game;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -50,7 +54,7 @@ public class MainForm extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         invitePlayersList = new javax.swing.JList();
-        jComboBox2 = new javax.swing.JComboBox();
+        numOfRoundsComboBox = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         clearBtn = new javax.swing.JButton();
         addAllBtn = new javax.swing.JButton();
@@ -60,7 +64,7 @@ public class MainForm extends javax.swing.JFrame {
         allPlayersList = new javax.swing.JList();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jButton10 = new javax.swing.JButton();
+        inviteBtn = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -111,7 +115,7 @@ public class MainForm extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(invitePlayersList);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "5", "10" }));
+        numOfRoundsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "5", "10" }));
 
         jLabel6.setText("Total Rounds:");
 
@@ -149,7 +153,12 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel8.setText("Players to Invite:");
 
-        jButton10.setText("Invite to Play!");
+        inviteBtn.setText("Invite to Play!");
+        inviteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inviteBtnActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel9.setText("New Game");
@@ -175,12 +184,12 @@ public class MainForm extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inviteBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(numOfRoundsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel9))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -192,7 +201,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(numOfRoundsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -215,7 +224,7 @@ public class MainForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(inviteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -273,49 +282,45 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addSelectedBtnActionPerformed
 
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new MainForm().setVisible(true);
-//            }
-//        });
-//    }
+    private void inviteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inviteBtnActionPerformed
+        if(invitePlayersModel.size()>0){
+            
+            //Get the number of rounds
+            int numOfRounds = Integer.valueOf((String) numOfRoundsComboBox.getSelectedItem());
+            
+            //Get the ArrayList<String> of peerNames to invite
+            Object temp[] = new Object[invitePlayersModel.size()];
+            invitePlayersModel.copyInto(temp);
+            
+            ArrayList<String> peerNames = new ArrayList<>();
+            
+            peerNames.add(main.getUsername());
+            String peerSum = CommandFactory.S + main.getUsername();
+            
+            for(Object o: temp){
+                String peerName = (String) o;
+                peerNames.add(peerName);
+                peerSum += CommandFactory.S + peerName;
+            }
+            GameForm gameForm = new GameForm(main);
+            main.getServer().addGame(main.getUsername(), new Game(main.getUsername(), numOfRounds, peerNames, gameForm));
+            for(String destinationPeerName: peerNames){
+                String messageToSend = PrepareCommand.code + CommandFactory.S + destinationPeerName + CommandFactory.S + main.getUsername() +  CommandFactory.S + numOfRounds + peerSum;
+                main.schedule(new SendCommand(main.getServer(), destinationPeerName, messageToSend));
+            }
+           
+        }
+    }//GEN-LAST:event_inviteBtnActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addAllBtn;
     private javax.swing.JButton addSelectedBtn;
     private javax.swing.JList allPlayersList;
     private javax.swing.JButton clearBtn;
+    private javax.swing.JButton inviteBtn;
     private javax.swing.JList invitePlayersList;
-    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton8;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -327,6 +332,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JComboBox numOfRoundsComboBox;
     private javax.swing.JLabel usernameLbl;
     // End of variables declaration//GEN-END:variables
 
