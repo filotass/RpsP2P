@@ -6,6 +6,7 @@ package command.incoming;
 
 import command.Command;
 import gui.MainForm;
+import main.Main;
 import network.Server;
 
 /**
@@ -20,11 +21,11 @@ public class JoinCommand implements Command{
     private String peerName;
     private int peerConID;
     private MainForm mainForm;
-    
+    private Main main;
     private String message;
     
-    public JoinCommand(Server server, int peerConID, String peerName, MainForm m, String message){
-        this.server = server;
+    public JoinCommand(Main main, int peerConID, String peerName, MainForm m, String message){
+        this.server = main.getServer();
         this.peerName = peerName;
         this.peerConID = peerConID;
         this.mainForm = m;

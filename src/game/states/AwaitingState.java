@@ -4,8 +4,11 @@
  */
 package game.states;
 
+import game.Game;
 import game.GameState;
-import java.util.ArrayList;
+import game.Peer;
+import main.Main;
+
 
 /**
  *
@@ -13,24 +16,27 @@ import java.util.ArrayList;
  */
 public class AwaitingState implements GameState{
 
+    private Game game;
+    
+    public AwaitingState(Game game){
+        this.game = game;
+    }
+    
+    @Override
+    public void readyReceived(int round, String peerName) {
+       Peer peer = game.getPeer(peerName);
+       peer.setStatus(Game.READY_STATUS);
+       game.getGameForm().setTable(game);
+       game.checkReadyStatus();
+    }
 
     @Override
-    public void responseToPreparation(String gameID, String peerName, boolean isAccepted) {
+    public void answerReceived(int round, String peerName, String rpsChoice) {
         System.err.println("Not supported in this state.");
     }
 
     @Override
-    public void readyReceived(String gameID, int round, String peerName) {
-       
-    }
-
-    @Override
-    public void answerReceived(String gameID, int round, String peerName, String rpsChoice) {
-        System.err.println("Not supported in this state.");
-    }
-
-    @Override
-    public void cancelReceived(String gameID, String peerName) {
+    public void cancelReceived(String peerName) {
         
     }
     

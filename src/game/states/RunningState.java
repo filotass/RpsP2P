@@ -4,6 +4,7 @@
  */
 package game.states;
 
+import game.Game;
 import game.GameState;
 
 /**
@@ -13,24 +14,24 @@ import game.GameState;
 public class RunningState implements GameState {
     
         
-
-    @Override
-    public void responseToPreparation(String gameID, String peerName, boolean isAccepted) {
-        System.err.println("Not supported in this state.");
+    private Game game;
+    
+    public RunningState(Game game){
+        this.game = game;
     }
 
     @Override
-    public void readyReceived(String gameID, int round, String peerName) {
+    public void readyReceived(int round, String peerName) {
        System.err.println("Not supported in this state.");
     }
 
     @Override
-    public void answerReceived(String gameID, int round, String peerName, String rpsChoice) {
+    public void answerReceived( int round, String peerName, String rpsChoice) {
 
     }
 
     @Override
-    public void cancelReceived(String gameID, String peerName) {
-
+    public void cancelReceived(String peerName) {
+        
     }
 }

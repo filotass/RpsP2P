@@ -35,19 +35,19 @@ public class Server extends Thread{
 	}
 	
 	public void run(){
-		try {
-			ServerSocket server = new ServerSocket(portNum);
-	        while (true) {
-	        	try{
-	    			Socket socket = server.accept();
+                try {
+                    ServerSocket server = new ServerSocket(portNum);
+                    while (true) {
+                            try{
+                                Socket socket = server.accept();
                                 this.add(new PeerConnection(main, socket));
-	    		} catch (IOException e) {
-	    			e.printStackTrace();
-	    		}
-	        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+                            } catch (IOException e) {
+                                    e.printStackTrace();
+                            }
+                    }
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
 	}
 	
 	public void add(PeerConnection peerConnection){
@@ -109,7 +109,7 @@ public class Server extends Thread{
         
         
         public void addGame(String gameID, Game game){
-            games.put(gameID, game);
+                games.put(gameID, game);
 	}
 	
 	public void removeGame(String gameID){ 

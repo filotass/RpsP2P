@@ -5,9 +5,12 @@
 package command.incoming;
 
 import command.Command;
+import command.CommandFactory;
 import game.Game;
+import game.Peer;
 import gui.GameForm;
 import gui.MainForm;
+import main.Main;
 import network.Server;
 
 /**
@@ -20,15 +23,12 @@ public class AnswerCommand implements Command{
     
     private String peerName;
     private String answer;
-    private GameForm gameForm;
-    private Game game;
-   
-    
-    public AnswerCommand(String peerName, String answer, Game game, GameForm gameForm){
- 
+    private String gameID;
+
+    public AnswerCommand(Main main, String destinationPeerName, String peerName, String answer, String gameID, int round, String message){
         this.peerName = peerName;
         this.answer = answer;
-        this.game = game;
+        this.gameID = gameID;
         this.gameForm = gameForm;
 
     }
@@ -42,7 +42,14 @@ public class AnswerCommand implements Command{
 
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet.");
+  
+        for(Peer peer: peers){
+            if(peer.getName().equals(main.getUsername())){
+                peer.setStatus(Game.ANSWERED_STATUS);
+                peer.setPrev_choice(Game.SCISSORS);
+                game.checkAnsweredStatus();
+            }else{
+                
     }
     
 }

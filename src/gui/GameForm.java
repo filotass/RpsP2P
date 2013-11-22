@@ -4,6 +4,10 @@
  */
 package gui;
 
+import command.CommandFactory;
+import command.incoming.AnswerCommand;
+import command.incoming.ReadyCommand;
+import command.outgoing.SendCommand;
 import game.Game;
 import game.Peer;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import main.Main;
 public class GameForm extends javax.swing.JFrame {
     
     private Main main;
+    private Game game;
 
     /**
      * Creates new form GameForm
@@ -24,7 +29,16 @@ public class GameForm extends javax.swing.JFrame {
     public GameForm(Main main) {
         initComponents();
         this.main = main;
+        this.setTitle(main.getUsername());
+        this.disableRound();
         Utils.centralize(this);
+    }
+    
+    public void setGame(Game game){
+        this.game = game;
+        if(main.getUsername().equals(game.getGameID())){
+            readyBtn.setEnabled(false);
+        }
     }
 
     /**
@@ -39,12 +53,12 @@ public class GameForm extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        roundLbl = new javax.swing.JLabel();
         scissorsBtn = new javax.swing.JButton();
         paperBtn = new javax.swing.JButton();
         rockBtn = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        readyBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,23 +93,43 @@ public class GameForm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Round");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        jLabel2.setText("0");
+        roundLbl.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        roundLbl.setText("0");
 
         scissorsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/scissors.png"))); // NOI18N
+        scissorsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scissorsBtnActionPerformed(evt);
+            }
+        });
 
         paperBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/paper.png"))); // NOI18N
+        paperBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paperBtnActionPerformed(evt);
+            }
+        });
 
         rockBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rock.png"))); // NOI18N
+        rockBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rockBtnActionPerformed(evt);
+            }
+        });
 
         jButton4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton4.setText("Cancel");
         jButton4.setToolTipText("");
         jButton4.setActionCommand("Ready For Next Round");
 
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton5.setText("<html>Ready For <br>Next Round</html>");
-        jButton5.setActionCommand("Ready For Next Round");
+        readyBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        readyBtn.setText("<html>Ready For <br>Next Round</html>");
+        readyBtn.setActionCommand("Ready For Next Round");
+        readyBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readyBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,7 +147,7 @@ public class GameForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))
+                            .addComponent(readyBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,7 +156,7 @@ public class GameForm extends javax.swing.JFrame {
                                 .addComponent(jLabel1))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(55, 55, 55)
-                                .addComponent(jLabel2)))
+                                .addComponent(roundLbl)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -134,7 +168,7 @@ public class GameForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(roundLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -142,7 +176,7 @@ public class GameForm extends javax.swing.JFrame {
                     .addComponent(rockBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jButton5)
+                            .addComponent(readyBtn)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButton4))
                         .addComponent(scissorsBtn, javax.swing.GroupLayout.Alignment.TRAILING)))
@@ -152,16 +186,84 @@ public class GameForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void readyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readyBtnActionPerformed
+       readyBtn.setEnabled(false);
+        ArrayList<Peer> peers = game.getPeers();
+        String messagePart1 = ReadyCommand.code;
+        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername();
+        for(Peer peer: peers){
+            if(peer.getName().equals(main.getUsername())){
+                peer.setStatus(Game.READY_STATUS);
+                this.setTable(game);
+                game.checkReadyStatus();
+            }else{
+                String message = messagePart1 + CommandFactory.S + peer.getName() + messagePart2;
+                main.schedule(new SendCommand(main.getServer(), peer.getName(), message)); 
+            }
+        }
+    }//GEN-LAST:event_readyBtnActionPerformed
+
+    private void rockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rockBtnActionPerformed
+        this.disableRound();
+        ArrayList<Peer> peers = game.getPeers();
+        String messagePart1 = AnswerCommand.code;
+        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername();
+        for(Peer peer: peers){
+            if(peer.getName().equals(main.getUsername())){
+                peer.setStatus(Game.ANSWERED_STATUS);
+                peer.setPrev_choice(Game.ROCK);
+                game.checkAnsweredStatus();
+            }else{
+                String message = messagePart1 + CommandFactory.S + peer.getName()+ CommandFactory.S + Game.ROCK + messagePart2;
+                main.schedule(new SendCommand(main.getServer(), peer.getName(), message));
+            }
+        }
+    }//GEN-LAST:event_rockBtnActionPerformed
+
+    private void paperBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paperBtnActionPerformed
+        this.disableRound();
+        ArrayList<Peer> peers = game.getPeers();
+        String messagePart1 = AnswerCommand.code;
+        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername();
+        for(Peer peer: peers){
+            if(peer.getName().equals(main.getUsername())){
+                peer.setStatus(Game.ANSWERED_STATUS);
+                peer.setPrev_choice(Game.PAPER);
+                game.checkAnsweredStatus();
+            }else{
+                String message = messagePart1 + CommandFactory.S + peer.getName()+ CommandFactory.S + Game.PAPER + messagePart2;
+                main.schedule(new SendCommand(main.getServer(), peer.getName(), message));
+            }
+        }
+    }//GEN-LAST:event_paperBtnActionPerformed
+
+    private void scissorsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scissorsBtnActionPerformed
+        this.disableRound();
+        ArrayList<Peer> peers = game.getPeers();
+        String messagePart1 = AnswerCommand.code;
+        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername();
+        for(Peer peer: peers){
+            if(peer.getName().equals(main.getUsername())){
+                peer.setStatus(Game.ANSWERED_STATUS);
+                peer.setPrev_choice(Game.SCISSORS);
+                game.checkAnsweredStatus();
+            }else{
+                String message = messagePart1 + CommandFactory.S + peer.getName()+ CommandFactory.S + Game.SCISSORS + messagePart2;
+                main.schedule(new SendCommand(main.getServer(), peer.getName(), message));
+            }
+        }
+    }//GEN-LAST:event_scissorsBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable masterTable;
     private javax.swing.JButton paperBtn;
+    private javax.swing.JButton readyBtn;
     private javax.swing.JButton rockBtn;
+    private javax.swing.JLabel roundLbl;
     private javax.swing.JButton scissorsBtn;
     // End of variables declaration//GEN-END:variables
 
@@ -184,6 +286,23 @@ public class GameForm extends javax.swing.JFrame {
        
         
     }
+
+    public void activateRound() {
+        rockBtn.setEnabled(true);
+        scissorsBtn.setEnabled(true);
+        paperBtn.setEnabled(true);
+        roundLbl.setText(String.valueOf(game.getCurrentRound()));
+    }
+    
+    public void disableRound() {
+        rockBtn.setEnabled(false);
+        scissorsBtn.setEnabled(false);
+        paperBtn.setEnabled(false);
+    }
+    
+    public void activateReady() {
+           readyBtn.setEnabled(true);
+    }
     
     private class MasterTable extends AbstractTableModel {
         
@@ -195,22 +314,27 @@ public class GameForm extends javax.swing.JFrame {
         private String[] columnNames = {"Peer Name","Total Points", "Prev Points", "Prev Choice","Status"};
         private Object[][] data;
 
+        @Override
         public int getColumnCount() {
             return columnNames.length;
         }
 
+        @Override
         public int getRowCount() {
             return data.length;
         }
 
+        @Override
         public String getColumnName(int col) {
             return columnNames[col];
         }
 
+        @Override
         public Object getValueAt(int row, int col) {
             return data[row][col];
         }
 
+        @Override
         public Class getColumnClass(int index) {
             if(index==0 || index==3 || index==4){
                 return String.class;
@@ -220,7 +344,7 @@ public class GameForm extends javax.swing.JFrame {
             return Object.class;
         }
 
-
+        @Override
         public boolean isCellEditable(int row, int col) {
             return false;
         }
