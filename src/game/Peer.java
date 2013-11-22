@@ -49,7 +49,7 @@ public class Peer {
 
     public void setPrevRoundPoints(int prevRoundPoints) {
         this.prevRoundPoints = prevRoundPoints;
-        this.totalPoints += totalPoints;
+        this.totalPoints += prevRoundPoints;
     }
 
     public void setPrev_choice(String prev_choice) {
@@ -59,9 +59,6 @@ public class Peer {
     public void setStatus(String status) {
         this.status = status;
     }
-    
-    
-    
-    
+
    
 }

@@ -5,7 +5,6 @@ import command.incoming.CancelCommand;
 import command.incoming.JoinCommand;
 import command.incoming.PrepareCommand;
 import command.incoming.ReadyCommand;
-import game.Game;
 import java.util.ArrayList;
 import main.Main;
 
@@ -32,8 +31,7 @@ public class CommandFactory {
             }else if(code.equals(ReadyCommand.code)){
                 return new ReadyCommand(main, params[1], params[2], Integer.parseInt(params[3]), params[4], message);
             }else if(code.equals(AnswerCommand.code)){
-               return new AnswerCommand(params[1], code, null, null);
-               //peer.getName()+  + Game.SCISSORS +  game.getGameID()+  game.getGameID()+ main.getUsername();
+               return new AnswerCommand(main, params[1], params[4],params[5], params[2],Integer.parseInt(params[3]), message);
             }else if(code.equals(CancelCommand.code)){
                 
             }

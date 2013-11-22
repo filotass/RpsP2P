@@ -207,14 +207,14 @@ public class GameForm extends javax.swing.JFrame {
         this.disableRound();
         ArrayList<Peer> peers = game.getPeers();
         String messagePart1 = AnswerCommand.code;
-        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername();
+        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername()+ CommandFactory.S + Game.ROCK;
         for(Peer peer: peers){
             if(peer.getName().equals(main.getUsername())){
                 peer.setStatus(Game.ANSWERED_STATUS);
                 peer.setPrev_choice(Game.ROCK);
                 game.checkAnsweredStatus();
             }else{
-                String message = messagePart1 + CommandFactory.S + peer.getName()+ CommandFactory.S + Game.ROCK + messagePart2;
+                String message = messagePart1 + CommandFactory.S + peer.getName() + messagePart2;
                 main.schedule(new SendCommand(main.getServer(), peer.getName(), message));
             }
         }
@@ -224,14 +224,14 @@ public class GameForm extends javax.swing.JFrame {
         this.disableRound();
         ArrayList<Peer> peers = game.getPeers();
         String messagePart1 = AnswerCommand.code;
-        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername();
+        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername()+ CommandFactory.S + Game.PAPER;
         for(Peer peer: peers){
             if(peer.getName().equals(main.getUsername())){
                 peer.setStatus(Game.ANSWERED_STATUS);
                 peer.setPrev_choice(Game.PAPER);
                 game.checkAnsweredStatus();
             }else{
-                String message = messagePart1 + CommandFactory.S + peer.getName()+ CommandFactory.S + Game.PAPER + messagePart2;
+                String message = messagePart1 + CommandFactory.S + peer.getName() + messagePart2;
                 main.schedule(new SendCommand(main.getServer(), peer.getName(), message));
             }
         }
@@ -241,14 +241,14 @@ public class GameForm extends javax.swing.JFrame {
         this.disableRound();
         ArrayList<Peer> peers = game.getPeers();
         String messagePart1 = AnswerCommand.code;
-        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername();
+        String messagePart2 = CommandFactory.S + game.getGameID() + CommandFactory.S + game.getCurrentRound()+CommandFactory.S + main.getUsername() + CommandFactory.S + Game.SCISSORS;
         for(Peer peer: peers){
             if(peer.getName().equals(main.getUsername())){
                 peer.setStatus(Game.ANSWERED_STATUS);
                 peer.setPrev_choice(Game.SCISSORS);
                 game.checkAnsweredStatus();
             }else{
-                String message = messagePart1 + CommandFactory.S + peer.getName()+ CommandFactory.S + Game.SCISSORS + messagePart2;
+                String message = messagePart1 + CommandFactory.S + peer.getName() + messagePart2;
                 main.schedule(new SendCommand(main.getServer(), peer.getName(), message));
             }
         }

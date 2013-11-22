@@ -6,6 +6,7 @@ package game.states;
 
 import game.Game;
 import game.GameState;
+import game.Peer;
 
 /**
  *
@@ -27,8 +28,13 @@ public class RunningState implements GameState {
 
     @Override
     public void answerReceived( int round, String peerName, String rpsChoice) {
-
+            Peer peer = game.getPeer(peerName);
+            peer.setStatus(Game.ANSWERED_STATUS);
+            peer.setPrev_choice(rpsChoice);
+            game.checkAnsweredStatus();
     }
+
+    
 
     @Override
     public void cancelReceived(String peerName) {
